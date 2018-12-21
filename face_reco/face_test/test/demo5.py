@@ -23,8 +23,9 @@
 import face_recognition
 import cv2
 import os
+import time
 video_capture = cv2.VideoCapture(0)
-path="./images/"
+path="./raw_images/"
 total_images=[]
 total_image_name=[]
 total_face_encoding=[]
@@ -41,24 +42,26 @@ while True:
     face_encodings= face_recognition.face_encodings(frame,face_locations)
     #在这个视频中循环遍历每个人人脸
     for (top,right,bottom,left),face_encoding in zip(face_locations,face_encodings):
+        print("1：",time.time())
         for i,v in enumerate(total_face_encoding):
             match = face_recognition.compare_faces([v],face_encoding,tolerance=0.5)
             name = 'Unknown'
             if match[0]:
                 name = total_image_name[i]
+                print("2：", time.time())
                 break
         # 画出一个框，框住人脸
         cv2.rectangle(frame,(left,top),(right,bottom),(0,0,255))
         #画出一个带名字的标签，放在框下
         font = cv2.FONT_HERSHEY_DUPLEX
         cv2.putText(frame,name,(left+6,bottom-6),font,2.0,(255,255,255),1)
-
+    print("3：", time.time())
     cv2.imshow('Video',frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-video_capture.release()
-cv2.destroyAllWindows()
-
+# video_capture.release()
+# cv2.destroyAllWindows()
+time.sleep(25)
 
 
 
